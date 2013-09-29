@@ -45,6 +45,8 @@ private:
 
 	wxPoint position;
 	wxSize size;
+
+	wxWindow* parent;
 };
 
 #endif // __CUSTOM_BUTTON_H__

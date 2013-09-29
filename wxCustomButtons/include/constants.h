@@ -10,4 +10,8 @@ const unsigned COLOUR_BLUE_TEXT = 0x007acc;
 const unsigned BUTTON_WIDTH = 80;
 const unsigned BUTTON_HEIGHT = 30;
 
+const unsigned INITIAL_BUTTON_STEP = 5;
+
+const unsigned MAX_INFO_STRING_LEN = 512;
+
 #endif // __CONSTANTS_H__

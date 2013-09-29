@@ -82,7 +82,7 @@ bool MyApp::OnInit()
         return false;
 
     // create the main application window
-	MainFrame* frame = new MainFrame(_T("Some Custom Buttons App"), wxDefaultPosition, wxSize( 450, 450), wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
+	MainFrame* frame = new MainFrame(_T("Some Custom Buttons App"), wxDefaultPosition, wxSize( 550, 500), wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN);
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)

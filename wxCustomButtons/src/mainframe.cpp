@@ -9,6 +9,7 @@ void MainFrame::connectEvents( wxWindowID winid)
 {
 	Connect( wxID_ANY, wxEVT_IDLE, wxIdleEventHandler( MainFrame::OnIdle));
 	Connect( wxID_ANY, wxEVT_ACTIVATE, wxActivateEventHandler( MainFrame::OnActivate));
+	Connect( wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnBtnClick));
 }
 
 void MainFrame::OnIdle( wxIdleEvent& evt)
@@ -58,7 +59,7 @@ void MainFrame::CreateButton( int winid, const char* label, wxPoint pos, wxSize 
 	}
 
 	buttons[ numButtons].id = winid;
-	buttons[ numButtons].handle = new wxCustomButton( mainPanel, winid, label, pos, sz);
+	buttons[ numButtons].handle = new wxCustomButton( this, mainPanel, winid, label, pos, sz);
 
 	if( buttons[ numButtons].handle != NULL) 
 	{
@@ -75,8 +76,37 @@ void MainFrame::OnBtnClick( wxCommandEvent& evt)
 	actionInfo->SetLabel( infoStr);
 }
 
+void MainFrame::ChangeAdditionalInfo( const char* info)
+{
+	if( additionalInfo != NULL)
+	{
+		if( info != NULL)
+		{
+			static int lines = 1;
+			wxString lbl = additionalInfo->GetLabel();
+			wxString infoStr( info);
+			infoStr.Append( "\n").Append( lbl);
+			if( lines > 20)
+			{
+				infoStr.RemoveLast( infoStr.Len() - infoStr.Last( '\n'));
+			}
+			lines++;
+			additionalInfo->SetLabel( infoStr);
+		}
+		else
+		{
+			additionalInfo->SetLabel( "No additional info currently");
+		}
+	}
+}
+
 void MainFrame::InitButtons()
 {
+	CreateButton( 100, "But 100", wxPoint( 10, 400), wxSize( 80, 30));
+	CreateButton( 101, "But 101", wxPoint( 110, 400), wxSize( 80,30));
+	CreateButton( 102, "But 102", wxPoint( 210, 400), wxSize( 80, 30));
+	CreateButton( 103, "But 103", wxPoint( 310, 400), wxSize( 80, 30));
+	CreateButton( 104, "But 104", wxPoint( 410, 400), wxSize( 80, 30));
 
 }
 
@@ -85,6 +115,7 @@ MainFrame::MainFrame( const wxString& title, wxPoint pos, wxSize sz, long style)
 	mainPanel( NULL),
 	actionLabel( NULL),
 	actionInfo( NULL),
+	additionalInfo( NULL),
 	buttons( NULL),
 	numButtons( 0),
 	sizeButtons( 0)
@@ -100,8 +131,16 @@ MainFrame::MainFrame( const wxString& title, wxPoint pos, wxSize sz, long style)
 	actionInfo = new wxStaticText( mainPanel, wxID_ANY, _T("No action yet"), wxPoint( 10, 30));
 	actionInfo->SetForegroundColour( COLOUR_GREEN_TEXT);
 
+	additionalInfo = new wxStaticText( mainPanel, wxID_ANY, _T(""), wxPoint( 10, 50), wxSize( 500, 320));
+	additionalInfo->SetForegroundColour( COLOUR_RED_TEXT);
+	ChangeAdditionalInfo( NULL);
+
 	connectEvents( wxID_ANY);
 
+	InitButtons();
+
+	Update();
+	Refresh();
 }
 
 MainFrame::~MainFrame()

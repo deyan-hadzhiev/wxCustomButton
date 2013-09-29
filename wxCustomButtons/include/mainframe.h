@@ -13,6 +13,7 @@ struct Button
 
 class MainFrame : public wxFrame
 {
+	friend class wxCustomButton;
 private:
 	void connectEvents( wxWindowID winid);
 
@@ -24,6 +25,7 @@ private:
 
 	wxStaticText* actionLabel;
 	wxStaticText* actionInfo;
+	wxStaticText* additionalInfo;
 
 	void OnIdle( wxIdleEvent& evt);
 	void OnActivate( wxActivateEvent& evt);
@@ -32,6 +34,8 @@ private:
 	void ExpandButtons();
 
 	void OnBtnClick( wxCommandEvent& evt);
+
+	void ChangeAdditionalInfo( const char* info);
 
 	void InitButtons();
 

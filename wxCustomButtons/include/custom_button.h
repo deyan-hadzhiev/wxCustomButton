@@ -4,10 +4,12 @@
 #include "wx/wx.h"
 #include "constants.h"
 
+class MainFrame;
+
 class wxCustomButton : public wxPanel
 {
 public:
-	wxCustomButton( wxWindow* parent, wxWindowID winid = wxID_ANY, wxString lbl = wxEmptyString, wxPoint = wxDefaultPosition, wxSize = wxDefaultSize);
+	wxCustomButton( MainFrame* mf, wxWindow* parent, wxWindowID winid = wxID_ANY, wxString lbl = wxEmptyString, wxPoint = wxDefaultPosition, wxSize = wxDefaultSize);
 
 	void OnMouseDown( wxMouseEvent& evt);
 	void OnMouseRelease( wxMouseEvent& evt);
@@ -31,6 +33,7 @@ protected:
 private:
 	void parseLabel( const wxString& input);
 	void connectEvents( wxWindowID id);
+	void informMainFrame( const char* str);
 
 	bool focused;
 	bool hovered;
@@ -47,6 +50,7 @@ private:
 	wxSize size;
 
 	wxWindow* parent;
+	MainFrame* mainFrame;
 };
 
 #endif // __CUSTOM_BUTTON_H__

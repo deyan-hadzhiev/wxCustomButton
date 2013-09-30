@@ -172,7 +172,7 @@ void wxCustomButton::OnKeyPress( wxKeyEvent& evt)
 
 	int keyCode = evt.GetKeyCode();
 
-	if( keyCode == WXK_RETURN || keyCode == WXK_NUMPAD_ENTER)
+	if( keyCode == WXK_RETURN || keyCode == WXK_NUMPAD_ENTER || keyCode == WXK_SPACE)
 	{
 		wxCommandEvent clicked( wxEVT_COMMAND_BUTTON_CLICKED, evt.GetId());
 		mainFrame->AddPendingEvent( clicked);

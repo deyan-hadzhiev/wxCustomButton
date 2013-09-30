@@ -34,14 +34,18 @@ private:
 	void ExpandButtons();
 
 	void OnBtnClick( wxCommandEvent& evt);
+	void OnCmdEnter( wxCommandEvent& evt);
 
 	void ChangeAdditionalInfo( const char* info);
 
 	void InitButtons();
+	void InitAccelerationTable();
 
 public:
 	MainFrame( const wxString& title, wxPoint pos, wxSize size, long style);
 	virtual ~MainFrame();
+
+	virtual bool ProcessEvent( wxEvent& evt);
 };
 
 #endif // __MAINFRAME_H__

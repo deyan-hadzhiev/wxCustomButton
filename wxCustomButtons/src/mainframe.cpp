@@ -2,6 +2,7 @@
 #include "constants.h"
 #include "custom_button.h"
 #include <cstdio>
+#include <wx/accel.h>
 
 using namespace std;
 
@@ -10,6 +11,8 @@ void MainFrame::connectEvents( wxWindowID winid)
 	Connect( wxID_ANY, wxEVT_IDLE, wxIdleEventHandler( MainFrame::OnIdle));
 	Connect( wxID_ANY, wxEVT_ACTIVATE, wxActivateEventHandler( MainFrame::OnActivate));
 	Connect( wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::OnBtnClick));
+	Connect( wxID_ANY, wxEVT_COMMAND_ENTER, wxCommandEventHandler( MainFrame::OnCmdEnter));
+	Connect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnCmdEnter));
 }
 
 void MainFrame::OnIdle( wxIdleEvent& evt)
@@ -76,6 +79,14 @@ void MainFrame::OnBtnClick( wxCommandEvent& evt)
 	actionInfo->SetLabel( infoStr);
 }
 
+void MainFrame::OnCmdEnter( wxCommandEvent& evt)
+{
+	char infoStr[ MAX_INFO_STRING_LEN] = "";
+	sprintf( infoStr, "Command id enter: %d activated", evt.GetId());
+
+	actionInfo->SetLabel( infoStr);
+}
+
 void MainFrame::ChangeAdditionalInfo( const char* info)
 {
 	if( additionalInfo != NULL)
@@ -110,6 +121,22 @@ void MainFrame::InitButtons()
 
 }
 
+void MainFrame::InitAccelerationTable()
+{
+	wxAcceleratorEntry* entries = new wxAcceleratorEntry[5];
+	for( int i = 0; i < 5; i++)
+	{
+		entries[i].Set( wxACCEL_ALT, 'A' + i, 100 + i);
+	}
+
+	wxAcceleratorTable accelTable( 5, entries);
+	bool valid = accelTable.Ok();
+
+	this->SetAcceleratorTable( accelTable);
+
+	delete[] entries;
+}
+
 MainFrame::MainFrame( const wxString& title, wxPoint pos, wxSize sz, long style)
 	:	wxFrame( NULL, wxID_ANY, title, pos, sz, style),
 	mainPanel( NULL),
@@ -139,6 +166,10 @@ MainFrame::MainFrame( const wxString& title, wxPoint pos, wxSize sz, long style)
 
 	InitButtons();
 
+	InitAccelerationTable();
+
+	mainPanel->SetFocus();
+
 	Update();
 	Refresh();
 }
@@ -156,4 +187,19 @@ MainFrame::~MainFrame()
 		buttons = NULL;
 		numButtons = 0;
 	}
+}
+
+bool MainFrame::ProcessEvent( wxEvent& evt)
+{
+	wxEventType eventType = evt.GetEventType();
+
+	if( eventType != wxEVT_PAINT && eventType != wxEVT_MOVE && eventType != 10109 && eventType != 10051 && eventType != 10170)
+	{
+		char infoStr[MAX_INFO_STRING_LEN] = "";
+
+		sprintf( infoStr, "Processed event of type: %d", evt.GetEventType());
+
+		ChangeAdditionalInfo( infoStr);
+	}
+	return wxFrame::ProcessEvent( evt);
 }

@@ -102,11 +102,11 @@ void MainFrame::ChangeAdditionalInfo( const char* info)
 
 void MainFrame::InitButtons()
 {
-	CreateButton( 100, "But 100", wxPoint( 10, 400), wxSize( 80, 30));
-	CreateButton( 101, "But 101", wxPoint( 110, 400), wxSize( 80,30));
-	CreateButton( 102, "But 102", wxPoint( 210, 400), wxSize( 80, 30));
-	CreateButton( 103, "But 103", wxPoint( 310, 400), wxSize( 80, 30));
-	CreateButton( 104, "But 104", wxPoint( 410, 400), wxSize( 80, 30));
+	CreateButton( 100, "&ABut 100", wxPoint( 10, 400), wxSize( 80, 30));
+	CreateButton( 101, "&BBut 101", wxPoint( 110, 400), wxSize( 80,30));
+	CreateButton( 102, "&CBut 102", wxPoint( 210, 400), wxSize( 80, 30));
+	CreateButton( 103, "&DBut 103", wxPoint( 310, 400), wxSize( 80, 30));
+	CreateButton( 104, "&EBut 104", wxPoint( 410, 400), wxSize( 80, 30));
 
 }
 

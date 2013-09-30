@@ -17,6 +17,7 @@ public:
 	void OnEnterHover( wxMouseEvent& evt);
 	void OnLeftHover( wxMouseEvent& evt);
 
+	void OnCharEvent( wxKeyEvent& evt);
 	void OnKeyPress( wxKeyEvent& evt);
 	void OnKeyRelease( wxKeyEvent& evt);
 
@@ -29,6 +30,7 @@ public:
 protected:
 	virtual void SetLabel( const wxString& newLbl);
 	virtual void render( wxDC& dc);
+	//bool ProcessEvent( wxEvent& evt);
 
 private:
 	void parseLabel( const wxString& input);

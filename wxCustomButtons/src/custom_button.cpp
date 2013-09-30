@@ -4,7 +4,7 @@
 bool wxCustomButton::altDown = false;
 
 wxCustomButton::wxCustomButton( MainFrame* mf, wxWindow* parent, wxWindowID winid, wxString lbl, wxPoint pos, wxSize sz)
-	:	wxPanel( parent, winid, pos, sz),
+	:	wxPanel( parent, winid, pos, sz, wxTAB_TRAVERSAL | wxWANTS_CHARS),
 	mainFrame( mf),
 	parent( parent),
 	focused( false),
@@ -29,6 +29,7 @@ void wxCustomButton::connectEvents( wxWindowID id)
 	Connect( id, wxEVT_ENTER_WINDOW, wxMouseEventHandler( wxCustomButton::OnEnterHover));
 	Connect( id, wxEVT_LEAVE_WINDOW, wxMouseEventHandler( wxCustomButton::OnLeftHover));
 
+	Connect( id, wxEVT_CHAR, wxKeyEventHandler( wxCustomButton::OnCharEvent));
 	Connect( id, wxEVT_KEY_DOWN, wxKeyEventHandler( wxCustomButton::OnKeyPress));
 	Connect( id, wxEVT_KEY_UP, wxKeyEventHandler( wxCustomButton::OnKeyRelease));
 
@@ -38,6 +39,28 @@ void wxCustomButton::connectEvents( wxWindowID id)
 	Connect( id, wxEVT_PAINT, wxPaintEventHandler( wxCustomButton::OnPaint));
 	Connect( id, wxEVT_NC_PAINT, wxPaintEventHandler( wxCustomButton::OnPaint));
 }
+//
+//bool wxCustomButton::ProcessEvent( wxEvent& evt)
+//{
+//	if( evt.GetEventType() == wxEVT_KEY_DOWN || evt.GetEventType() == wxEVT_CHAR)
+//	{
+// 		wxKeyEvent& keyEvent = dynamic_cast<wxKeyEvent&>( evt);
+//		informMainFrame( "Process key event function %d");
+//		if( keyEvent.GetKeyCode() == WXK_RETURN)
+//		{
+//			wxCommandEvent clicked( wxEVT_COMMAND_BUTTON_CLICKED, evt.GetId());
+//			mainFrame->AddPendingEvent( clicked);
+//			return true;
+//		}
+//	}
+//	if( evt.GetEventType() == wxEVT_NAVIGATION_KEY)
+//	{
+//		wxNavigationKeyEvent& keyEvent = dynamic_cast<wxNavigationKeyEvent&>( evt);
+//		informMainFrame( "Process navigation key event function %d");
+//	}
+//
+//	return wxPanel::ProcessEvent( evt);
+//}
 
 void wxCustomButton::parseLabel( const wxString& input)
 {
@@ -59,7 +82,6 @@ void wxCustomButton::parseLabel( const wxString& input)
 		tailLabel = "";
 		defaultChar = '\0';
 	}
-
 }
 
 void wxCustomButton::render( wxDC& dc)
@@ -132,11 +154,48 @@ void wxCustomButton::OnLeftHover( wxMouseEvent& evt)
 	paintNow();
 }
 
+void wxCustomButton::OnCharEvent( wxKeyEvent& evt)
+{
+	char formatedStr[MAX_INFO_STRING_LEN] = "";
+	sprintf( formatedStr, "Char event key %d, event on button no: %d", evt.GetKeyCode(), evt.GetId());
+	informMainFrame( formatedStr);
+	
+	evt.ResumePropagation( wxEVENT_PROPAGATE_MAX);
+	evt.Skip();
+}
+
 void wxCustomButton::OnKeyPress( wxKeyEvent& evt)
 {
 	char formatedStr[MAX_INFO_STRING_LEN] = "";
 	sprintf( formatedStr, "Pressed key %d, event on button no: %d", evt.GetKeyCode(), evt.GetId());
 	informMainFrame( formatedStr);
+
+	int keyCode = evt.GetKeyCode();
+
+	if( keyCode == WXK_RETURN || keyCode == WXK_NUMPAD_ENTER)
+	{
+		wxCommandEvent clicked( wxEVT_COMMAND_BUTTON_CLICKED, evt.GetId());
+		mainFrame->AddPendingEvent( clicked);
+	}
+	else if( keyCode == WXK_RIGHT || keyCode == WXK_DOWN || ( keyCode == WXK_TAB && !evt.ShiftDown()))
+	{
+		wxNavigationKeyEvent next;
+		next.SetDirection( true);
+		parent->AddPendingEvent( next);
+	}
+	else if( keyCode == WXK_LEFT || keyCode == WXK_UP || ( keyCode == WXK_TAB && evt.ShiftDown()))
+	{
+		wxNavigationKeyEvent next;
+		next.SetDirection( false);
+		parent->AddPendingEvent( next);
+	}
+	else
+	{
+		evt.SetEventType( wxEVT_CHAR);
+		parent->AddPendingEvent( evt);
+		mainFrame->AddPendingEvent( evt);
+	}
+
 }
 
 void wxCustomButton::OnKeyRelease( wxKeyEvent& evt)
@@ -145,6 +204,9 @@ void wxCustomButton::OnKeyRelease( wxKeyEvent& evt)
 	char formatedStr[MAX_INFO_STRING_LEN] = "";
 	sprintf( formatedStr, "Released key %d, event on button no: %d", evt.GetKeyCode(), evt.GetId());
 	informMainFrame( formatedStr);
+
+	parent->AddPendingEvent( evt);
+	mainFrame->AddPendingEvent( evt);
 }
 
 void wxCustomButton::OnSetFocus( wxFocusEvent& evt)

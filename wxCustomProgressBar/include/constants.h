@@ -1,0 +1,9 @@
+#ifndef __CONSTANTS_H__
+#define __CONSTANTS_H__
+
+unsigned COLOUR_PANEL_BACKGROUND = 0x48423d;
+
+unsigned COLOUR_PROGRESS_BACKGROUND = 0x2a241f;
+unsigned COLOUR_PROGRESS_FOREGROUND = 0xd1a068;
+
+#endif // __CONSTANTS_H__
